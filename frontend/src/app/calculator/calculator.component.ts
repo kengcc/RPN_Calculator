@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -32,7 +32,10 @@ export class CalculatorComponent implements OnInit {
     '5 !'
   ];
 
-  constructor(private readonly calculatorApi: CalculatorApiService) {}
+  constructor(
+    private readonly calculatorApi: CalculatorApiService,
+    private readonly changeDetector: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadHistory();
@@ -47,11 +50,13 @@ export class CalculatorComponent implements OnInit {
       next: (response) => {
         this.result = response.result;
         this.loading = false;
+        this.changeDetector.detectChanges();
         this.loadHistory();
       },
       error: (response: HttpErrorResponse) => {
         this.error = response.error?.error || 'Unable to calculate expression.';
         this.loading = false;
+        this.changeDetector.detectChanges();
         this.loadHistory();
       }
     });
@@ -64,6 +69,7 @@ export class CalculatorComponent implements OnInit {
   clearHistory(): void {
     this.calculatorApi.clearHistory().subscribe(() => {
       this.history = [];
+      this.changeDetector.detectChanges();
     });
   }
 
@@ -71,9 +77,11 @@ export class CalculatorComponent implements OnInit {
     this.calculatorApi.history().subscribe({
       next: (response) => {
         this.history = response.history;
+        this.changeDetector.detectChanges();
       },
       error: () => {
         this.history = [];
+        this.changeDetector.detectChanges();
       }
     });
   }

@@ -19,6 +19,8 @@ Use the root npm workspace commands:
 - `npm run test:backend` to run backend tests
 - `npm run test:frontend` to run frontend tests
 - `npm test` to run backend and frontend tests
+- `npm run build --workspace frontend` to build the Angular app
+- `npm audit --omit=dev` to check production dependency vulnerabilities
 
 ## Coding Style & Naming Conventions
 Use the style rules of the chosen language and keep them consistent across the repository:
@@ -32,8 +34,14 @@ If you add formatting or linting tools, record the exact command here.
 ## Testing Guidelines
 Add tests alongside new behavior, not after the fact. Keep test names descriptive and specific to the scenario being verified. Prefer fast unit tests by default, and add integration tests only when they cover real cross-module behavior.
 
+## Design Guidelines
+Use [DESIGN.md](./DESIGN.md) as the source of truth for visual styling. Keep Genesis tokens in `frontend/src/styles.css` and feature-specific layout styles near the Angular component. Use indigo only for interactive states, 12px radius for cards, 6px radius for buttons and inputs, and JetBrains Mono for RPN expressions and history rows.
+
+## Runtime Notes
+Calculation responses should not wait for MongoDB history writes. Save history in the background so the UI can show results immediately. The Angular calculator component explicitly triggers change detection after API responses; preserve that behavior unless the app is migrated to a different change detection strategy.
+
 ## Commit & Pull Request Guidelines
-There is no Git history available in this workspace to infer a commit style. Use clear, imperative commit messages, for example: `Add auth token validation`.
+Use clear, imperative commit messages, for example: `Add auth token validation`.
 
 Pull requests should include:
 - A short summary of the change

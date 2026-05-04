@@ -9,10 +9,10 @@ calculatorRouter.post("/calculate", async (req, res) => {
 
   try {
     const result = evaluateRpn(expression);
-    await saveHistory({ expression, result, status: "success" });
+    queueHistorySave({ expression, result, status: "success" });
     res.json({ expression, result });
   } catch (error) {
-    await saveHistory({
+    queueHistorySave({
       expression: typeof expression === "string" ? expression : "",
       result: null,
       status: "error",
@@ -46,12 +46,14 @@ calculatorRouter.delete("/history", async (_req, res) => {
   res.status(204).send();
 });
 
-async function saveHistory(entry) {
+function queueHistorySave(entry) {
   if (!isHistoryAvailable()) {
     return;
   }
 
-  await CalculationHistory.create(entry);
+  CalculationHistory.create(entry).catch((error) => {
+    console.warn(`Calculation history save failed: ${error.message}`);
+  });
 }
 
 function isHistoryAvailable() {

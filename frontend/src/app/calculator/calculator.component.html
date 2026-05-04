@@ -1,0 +1,64 @@
+<main class="shell">
+  <section class="calculator">
+    <div>
+      <p class="eyebrow">RPN Calculator</p>
+      <h1>Postfix Expression Evaluator</h1>
+      <p class="intro">
+        Enter operands before operators. Supported operators are +, -, /, *, ^, %, and !.
+      </p>
+    </div>
+
+    <form class="entry" (ngSubmit)="calculate()">
+      <label for="expression">Expression</label>
+      <div class="entry-row">
+        <input
+          id="expression"
+          name="expression"
+          [(ngModel)]="expression"
+          placeholder="Example: 2 3 +"
+          autocomplete="off"
+        >
+        <button type="submit" [disabled]="loading">
+          {{ loading ? 'Calculating' : 'Calculate' }}
+        </button>
+      </div>
+    </form>
+
+    <div class="result" *ngIf="result !== null">
+      Result: <strong>{{ result }}</strong>
+    </div>
+
+    <div class="error" *ngIf="error">
+      {{ error }}
+    </div>
+
+    <section class="examples" aria-label="Examples">
+      <button
+        type="button"
+        *ngFor="let example of examples"
+        (click)="useExample(example)"
+      >
+        {{ example }}
+      </button>
+    </section>
+  </section>
+
+  <section class="history">
+    <div class="history-header">
+      <h2>History</h2>
+      <button type="button" (click)="clearHistory()" [disabled]="history.length === 0">
+        Clear
+      </button>
+    </div>
+
+    <p class="empty" *ngIf="history.length === 0">No calculations yet.</p>
+
+    <ul *ngIf="history.length > 0">
+      <li *ngFor="let item of history">
+        <span>{{ item.expression }}</span>
+        <strong *ngIf="item.status === 'success'">{{ item.result }}</strong>
+        <strong class="failed" *ngIf="item.status === 'error'">{{ item.errorMessage }}</strong>
+      </li>
+    </ul>
+  </section>
+</main>

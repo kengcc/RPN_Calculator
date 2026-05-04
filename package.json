@@ -1,0 +1,18 @@
+{
+  "name": "rpn-calculator-mean",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MEAN stack RPN calculator.",
+  "scripts": {
+    "install:all": "npm install --workspaces",
+    "dev:backend": "npm run dev --workspace backend",
+    "dev:frontend": "npm run start --workspace frontend",
+    "test": "npm run test --workspace backend && npm run test --workspace frontend",
+    "test:backend": "npm run test --workspace backend",
+    "test:frontend": "npm run test --workspace frontend"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}
